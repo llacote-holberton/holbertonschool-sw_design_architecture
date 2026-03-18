@@ -38,17 +38,16 @@ class VehicleFactory:
             raise ValueError(f"Unknown vehicle kind: {kind!r}")
         return self._registry[kind]()
 
-    def main() -> None:
-        factory = VehicleFactory()
 
-        print(factory.create("bus").mode())
-        print(factory.create("train").mode())
-        print(factory.create("bike").mode())
+def main() -> None:
+    factory = VehicleFactory()
 
-        # TODO: register Scooter with factory.register_kind(...)
-        factory.register_kind("scooter", Scooter)
-        # TODO: print factory.create("scooter").mode()
-        print(factory.create("scooter").mode())
+    print(factory.create("bus").mode())
+    print(factory.create("train").mode())
+    print(factory.create("bike").mode())
+
+    factory.register_kind("scooter", Scooter)
+    print(factory.create("scooter").mode())
 
 
 if __name__ == "__main__":
