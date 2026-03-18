@@ -141,6 +141,53 @@ Adding it required zero edits to NewsSubject or any existing observer.
 
 <details>
 <summary>(Click for detailed information on Task 2 concept, goals and requirements)</b></summary>
+### Design Problem
+
+When a system has several independent optional features, inheritance can create too many subclasses to manage.
+
+### Friendly scenario
+
+Imagine a coffee shop system. A customer may want milk, sugar, caramel, or any combination of them. Creating one subclass for every possible combination would quickly become impractical. Wrapping an object lets the system add behavior dynamically.
+
+### Objective
+
+Add a new decorator that extends a `Beverage` by wrapping it, composing correctly with existing decorators without modifying any existing class.
+
+### Context
+
+The Decorator pattern is a structural pattern. It attaches new responsibilities to an object by wrapping it — an alternative to creating a new subclass for each feature combination. With N independent optional features, inheritance would require `2^N` subclasses; decorators require only N wrapper classes that compose freely.
+
+A subclass-based alternative for three toppings would produce:
+```
+CoffeeWithMilk
+CoffeeWithSugar
+CoffeeWithMilkAndSugar
+CoffeeWithCaramel
+CoffeeWithMilkAndCaramel
+...
+```
+Each decorator instead wraps any `Beverage`, delegates `cost()` and `description()` to `self._inner`, and adds its own contribution. Stacking is done in the constructor call: `MilkDecorator(SugarDecorator(Coffee()))`. The nesting order determines the description order.
+
+In starter code provided, `Coffee` is a concrete `Beverage`. `MilkDecorator (+10¢, " + milk")` and `SugarDecorator (+5¢, " + sugar")` are fully implemented as a model. `CaramelDecorator` is missing.
+
+### Instructions
+
+1. Copy the starter code from here  
+https://raw.githubusercontent.com/hbtn-edu/public_resources/refs/heads/main/3960-design_patterns/decorator_starter.py
+2. Read MilkDecorator and SugarDecorator as your model.
+3. Implement CaramelDecorator:
+   * `cost()` returns `self._inner.cost() + 15`.
+   * `description()` returns `self._inner.description() + " + caramel"`.
+4. In `main`, add the line that builds `CaramelDecorator(MilkDecorator(SugarDecorator(Coffee())))` and prints its description and cost.
+
+Running the code must print exactly:
+
+Coffee + milk 60
+Coffee + sugar + milk 65
+Coffee + sugar + milk + caramel 80
+
+No existing class is modified, the new behavior lives entirely in `CaramelDecorator`. Adding a new topping required zero edits to `Coffee`, `MilkDecorator`, or `SugarDecorator`.
+
 
 </details>
 
