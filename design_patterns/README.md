@@ -85,6 +85,56 @@ Adding a new vehicle type required zero edits to existing factory logic.
 <details>
 <summary>(Click for detailed information on Task 1 concept, goals and requirements)</b></summary>
 
+## Design Problem
+
+Some systems need to react to events without tightly coupling the event source to every possible reaction.
+
+## Friendly scenario
+
+Consider a news platform that publishes updates. One subscriber may send emails, another may write logs, and another may send SMS alerts only for urgent news. The publisher should not need to know the internal details of each subscriber.
+
+## Objective
+
+Implement a new observer and subscribe it to a running notification system, filtering it to receive only specific event topics.
+
+## Context
+
+The Observer pattern is a behavioral pattern. It defines a one-to-many dependency: when a subject emits an event, all registered observers are notified without the subject knowing their concrete types. This decouples the publisher (who emits) from the listeners (who react), making it easy to add new reactions without touching the publisher.
+
+A tightly coupled alternative hardcodes every listener in the publisher:
+```
+def publish(self, headline: str) -> None:
+    EmailNotifier().send(headline)
+    LogNotifier().write(headline)
+```
+Adding another reaction in that design would force you to edit the publisher.
+
+With `NewsSubject`, the publisher only calls `self._subject.notify(topic, data)` (it has no knowledge of `LogObserver`, `EmailObserver`, or any future listener). Observers register themselves and declare which topics they care about.
+
+In the provided starter file, `NewsSubject` already implements `subscribe(observer, topics=None)`, `unsubscribe(observer)`, and `notify(topic, data)` with safe snapshot iteration (to handle observers that unsubscribe during a broadcast). `LogObserver` (subscribed to sports and breaking) and `EmailObserver` (subscribed to all topics) are already wired. `SmsObserver` is missing.
+
+## Instructions
+
+1. Copy the starter code from here:  
+  https://raw.githubusercontent.com/hbtn-edu/public_resources/refs/heads/main/3960-design_patterns/observer_starter.py
+
+2. Read the existing NewsSubject, LogObserver, and EmailObserver.
+3. Implement SmsObserver with an update(topic, data) method that prints sms:<topic>=<data>.
+4. In main(), instantiate SmsObserver and subscribe it with topics={"breaking"} only.
+
+Running the code must print exactly:
+```
+  email:weather=rain
+  log:sports=goal
+  email:sports=goal
+  log:breaking=alert
+  email:breaking=alert
+  sms:breaking=alert
+```
+
+SmsObserver must react only to "breaking" — it must not print for weather or sports events.
+Adding it required zero edits to NewsSubject or any existing observer.
+
 </details>
 
 ## 02. Decorator - Adding a new wrapper
