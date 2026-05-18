@@ -1,0 +1,18 @@
+sequenceDiagram
+
+    participant User
+    participant Library
+    participant Book
+
+    %% "Manual request"
+    User->>Library: create a loan
+
+    activate Library
+    %% Make book mark itself as unavailable, although
+    %%   imo we should wait for Loan to be created...
+    Library->>Book: mark_as_unavailable()
+    %% Create declaration must happen before use
+    create participant Loan
+    Library->>Loan: create_loan(user, book)
+    Library-->>User: loan created
+    deactivate Library
