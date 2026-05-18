@@ -1,0 +1,47 @@
+classDiagram
+
+    class Book {
+        -title: str
+        -author: str
+        -is_available: bool
+        +mark_as_available() None
+        +mark_as_unavailable() None
+    }
+
+    class User {
+        -name: str
+        -email: str
+        }
+
+    class Loan {
+        %% IA suggested putting str instead of datetime
+        %%   because a) latter requires a module b) context is an exercise.
+        -start_date: str
+        -end_date: str
+        +close_loan() None
+    }
+
+    class Library {
+        +add_book(book: Book) None
+        +register_user(user: User) None
+        +create_loan(user: User, book: Book) Loan
+    }
+
+    %% In the context of this exercise we are talking of "all in one app"
+    %%   which implies that the books, users and loans only have meaning
+    %%   "within the Library" system.
+    %% Hence the "composition" type relationship.
+    Library "1" *-- "*" Book
+    Library "1" *-- "*" User
+    Library "1" *-- "*" Loan
+    %% Aggregation relation as Loan cannot exist without a User AND a Book
+    Loan "1" o-- "1" Book : made on
+    Loan "1" o-- "1" User : made by
+    
+    %% Apparently specifying this is useless because there is already a
+    %%   "stronger relation" existing between classes (composition)
+    %% Library ..> Book : (on add_book) requires
+    %% Library ..> Book : (on create_loan) locks
+    %% Library ..> User : (on register_user) requires
+    %% Loan ..> Book : (on close_loan) frees
+
